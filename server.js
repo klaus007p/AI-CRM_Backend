@@ -3,10 +3,10 @@ import express from 'express';
 import cors from 'cors'
 import morgan from 'morgan';
 
-import { connectDB } from './config/db';
-import { notFound, errorHandler } from './middleware/error.middleware';
+import { connectDB } from './config/db.js';
+import { notFound, errorHandler } from './middleware/error.middleware.js';
 
-const express = express();
+const app = express();
 
 // Adding middleware to our sever
 
