@@ -11,6 +11,7 @@ export const errorHandler = (req, res, next) => {
     let statusCode = err.statusCode || 500;
     let message = err.message || "Internal Server Error"
 
+    // will add ObjectId later
 
     // if email already registered then return 
     if (err.code === 11000) {
