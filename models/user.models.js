@@ -45,3 +45,14 @@ const userSchema = new mongoose.Schema(
     },
     {timestamps: true}
 );
+
+
+// We will use bcrypt so we dont have to hash the password again and again if user didnt save the credentials
+
+userSchema.pre("save", async function (next) {
+    if(!this.isModified("password")) return next();
+
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+})
