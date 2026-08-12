@@ -56,3 +56,11 @@ userSchema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, salt);
     next();
 })
+
+// Function to match the password
+
+userSchema.methods.matchPassword = function(enter) {
+    return bcrypt.compare(enter, this.password);
+}
+
+export const User = mongoose.model("User", userSchema);
