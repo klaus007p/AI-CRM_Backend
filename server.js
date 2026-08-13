@@ -6,6 +6,9 @@ import morgan from 'morgan';
 import { connectDB } from './config/db.js';
 import { notFound, errorHandler } from './middleware/error.middleware.js';
 
+import authRoutes from "./routes/auth.routes.js" // Check file name in route incase of error
+
+
 const app = express();
 
 // Adding middleware to our sever
@@ -19,13 +22,15 @@ app.use(
 
 app.use(express.json({ limit: "1mb"}));
 app.use(express.urlencoded({ extended: true}))
-if(process.env.NODE_ENV !== "Production") app.use(morgan("dev"))
+if(process.env.NODE_ENV !== "production") app.use(morgan("dev"))
 
 
 // Api rotes
 
 app.get("/api/health", (req, res) =>
 res.json({ success: true, status: "ok", service: "TTM CRM API"}))
+
+app.use("/api/auth", authRoutes);
 
 // Error Handling
 

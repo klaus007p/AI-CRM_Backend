@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
-import { User, User } from '../models/user.models'
-import { asyncHandler } from '../utils/asyncHandler'
-import { ApiError } from '../utils/ApiError'
+import { User } from '../models/User.models.js'
+import { asyncHandler } from '../utils/asyncHandler.js'
+import { ApiError } from '../utils/ApiError.js'
 
 // If Auuthorization  fails it will throw errors from apiError
 

@@ -1,8 +1,8 @@
-import { User } from "../models/user.models.js";
+import { User } from "../models/User.models.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { generateToken } from "../utils/generate.tokens.js";
-import { use } from "react";
+// import React  from "react";
 
 
 const toClientUser = (user) => ({
