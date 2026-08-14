@@ -6,8 +6,8 @@ import morgan from 'morgan';
 import { connectDB } from './config/db.js';
 import { notFound, errorHandler } from './middleware/error.middleware.js';
 
-import authRoutes from "./routes/auth.routes.js" // Check file name in route incase of error
-
+import authRoutes from "./routes/auth.routes.js"; // Check file name in route incase of error
+import leadRoutes from "./routes/lead.routes.js";
 
 const app = express();
 
@@ -30,7 +30,8 @@ if(process.env.NODE_ENV !== "production") app.use(morgan("dev"))
 app.get("/api/health", (req, res) =>
 res.json({ success: true, status: "ok", service: "TTM CRM API"}))
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoutes); // Route for Authentication
+app.use("/api/leads", leadRoutes); // Routes for Lead service
 
 // Error Handling
 
