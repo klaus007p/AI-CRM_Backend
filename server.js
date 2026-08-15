@@ -8,6 +8,10 @@ import { notFound, errorHandler } from './middleware/error.middleware.js';
 
 import authRoutes from "./routes/auth.routes.js"; // Check file name in route incase of error
 import leadRoutes from "./routes/lead.routes.js";
+import contactRoutes from "./routes/contact.routes.js";
+import noteRoutes from "./routes/note.routes.js";
+import taskRoutes from "./routes/taks.routes.js";
+
 
 const app = express();
 
@@ -32,6 +36,10 @@ res.json({ success: true, status: "ok", service: "TTM CRM API"}))
 
 app.use("/api/auth", authRoutes); // Route for Authentication
 app.use("/api/leads", leadRoutes); // Routes for Lead service
+
+app.use("/api/contacts", contactRoutes); // Route for contact services
+app.use("/api/notes", noteRoutes); // Route for Notes Services
+app.use("/api/tasks", taskRoutes); // Route for Task Services
 
 // Error Handling
 
