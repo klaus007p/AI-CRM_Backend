@@ -19,3 +19,44 @@ export const getTasks = asyncHandler(async(req, res) => {
 
     res.json({ success: true, count: Tasks.length, Tasks});
 });
+
+
+// Function to create the tasks
+
+export const createTask = asyncHandler(async(req,res) => {
+    const task = await Task.create({ ...req.body, owner: req.user._id});
+    res.status(201).json({ success: true, task });
+});
+
+
+// Function to update the tasks
+
+export const updateTask = asyncHandler(async(req, res) => {
+    const { owner, ...updates } = req.body;
+
+    if(updates.status === "Completed" && !updates.completedAt){
+        updates.completedAt = new Date();
+    }
+
+    if(updates.status && updates.status !== "Completed") {
+        updates.completedAt = null;
+    }
+
+    const task = await Task.findOneAndUpdate(
+        { _id: req.params.id, owner: req.user._id },
+        updates,
+        { new: true, runValidators: true }
+    );
+
+    if(!task) throw new ApiError(404, "Task not found");
+    res.json({ success: true, task });
+});
+
+
+// Function to delete the task 
+
+export const deleteTask = asyncHandler(async(req, res) => {
+    const task  =  await Task.findOneAndDelete({ _id: req.params.id, owner: req.user._id });
+    if(!task) throw new ApiError(404, "Task not found");
+    res.json({ success: true, message: "Task Deleted" });
+});
