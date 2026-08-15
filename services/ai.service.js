@@ -117,10 +117,9 @@ Return JSON only.`;
 
 // AI feature 2: to Generate the emails
 
-export const generateEmail =  async({ lead, purpose, tone, sender}) => {
-    const prompt = `You are a senior sales representative writing on behalf of ${
-        sender?.name || "our team"
-    } ${sender?.company ? `at ${sender.company}`: ""}.
+export const generateEmail = async ({ lead, purpose, tone, sender }) => {
+    const prompt = `You are a senior sales representative writing on behalf of ${sender?.name || "our team"
+        } ${sender?.company ? `at ${sender.company}` : ""}.
     
 Write a professional sales email.
 Purpose: ${purpose || "follow-up"}
@@ -133,9 +132,8 @@ Recipient (lead) details:
 — Context / notes: ${lead?.notes || "none"}
 
 Return JSON only with a compelling subject line and a complete email body.
-use line breaks (\\n) in the body. keep it under 180 words sign off as ${
-    sender?.name || "the TTM CRM team"
-    }.`;
+use line breaks (\\n) in the body. keep it under 180 words sign off as ${sender?.name || "the TTM CRM team"
+        }.`;
 
     const schema = {
         type: "object",
@@ -149,3 +147,50 @@ use line breaks (\\n) in the body. keep it under 180 words sign off as ${
     return generateEmail(prompt, schema);
 
 };
+
+
+// AI Feature 3: to generate the sales Insights
+
+
+export const generateSalesInsights = async (pipelineStats) => {
+    const prompt = `You are revenue-operations advisor. Given this snapshot of a sales
+pipeline, identify what is working, what is at risk, and concrete actions to prove conversion
+    
+pipeline snapshot (JSON):
+${JSON.stringify(pipelineStats, null, 2)}
+    
+    
+Return JSON only: `;
+
+    const schema = {
+        type: "object",
+        properties: {
+            headline: {
+                type: "string",
+                description: "one sentence summary of pipeline health",
+            },
+
+            insights: {
+                type: "array",
+                description: "3-5 specific data driven observations",
+                items: { type: "string" }, 
+            },
+
+            recommendation: {
+                type: "array",
+                description: "3-5 prioritized , actionable recommendations",
+                items: { type: "string" }
+            },
+
+            healthScore: {
+                type: "integer",
+                description: "Overall pipeline health 0-100",
+            },
+        },
+        required: ["headline", "insights","recommendations", "healthScore"],
+    };
+
+    return generateJSON(prompt, schema);
+};
+
+export { generateText };
