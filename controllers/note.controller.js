@@ -1,4 +1,4 @@
-import { Note } from '../models/Note.models.js';
+import { Notes } from '../models/Note.models.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from '../utils/ApiError.js';
 
@@ -44,11 +44,11 @@ export const createNote = asyncHandler(async(req, res) => {
 export const updateNote = asyncHandler(async(req, res) => {
     const { owner,...updates } = req.body;
     const note = await Note.findOneAndUpdate(
-        { _if: req.params.id, owner: req.user._id },
+        { _id: req.params.id, owner: req.user._id },
         updates,
         { new: true, runValidators: true}
     );
-    if(!notes) throw new ApiError(404, "Note not found");
+    if(!note) throw new ApiError(404, "Note not found");
     res.json({ success: true, note});
 
 });

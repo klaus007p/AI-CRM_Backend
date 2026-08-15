@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { getTasks, createTask, updateTask, deleteTask } from "../controllers/task.controller.js";
 import { protect } from "../middleware/auth.middleware.js";
-import router from "./contact.routes";
+// import router from "./contact.routes.js";
 
 
 const router = Router();
+
 router.use(protect);
 
 

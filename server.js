@@ -10,7 +10,7 @@ import authRoutes from "./routes/auth.routes.js"; // Check file name in route in
 import leadRoutes from "./routes/lead.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 import noteRoutes from "./routes/note.routes.js";
-import taskRoutes from "./routes/taks.routes.js";
+import taskRoutes from "./routes/task.routes.js";
 
 
 const app = express();
