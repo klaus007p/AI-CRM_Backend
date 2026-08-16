@@ -12,6 +12,8 @@ import contactRoutes from "./routes/contact.routes.js";
 import noteRoutes from "./routes/note.routes.js";
 import taskRoutes from "./routes/task.routes.js";
 
+import aiRoutes from "./routes/ai.routes.js";
+
 
 const app = express();
 
@@ -40,6 +42,8 @@ app.use("/api/leads", leadRoutes); // Routes for Lead service
 app.use("/api/contacts", contactRoutes); // Route for contact services
 app.use("/api/notes", noteRoutes); // Route for Notes Services
 app.use("/api/tasks", taskRoutes); // Route for Task Services
+
+app.use("/api/ai", aiRoutes); // Route for Accessing AI services
 
 // Error Handling
 
