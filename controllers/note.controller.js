@@ -12,7 +12,7 @@ export const getNotes = asyncHandler(async(req, res) => {
     if(contact) filter.contact = contact;
     if(search) filter.content = new RegExp(search, "i");
 
-    const notes = await Note.find(filter)
+    const notes = await Notes.find(filter)
     .sort({ pinned: -1, createdAt: -1}) // pinned notes always comes first
     .populate("lead", "name company")
     .populate("contact", "name company");
@@ -27,7 +27,7 @@ export const createNote = asyncHandler(async(req, res) => {
     const { content, lead, contact, pinned } = req.body;
     if(!content) throw new ApiError(400, "Note Content is Required");
 
-    const note = await Note.create({
+    const note = await Notes.create({
         owner: req.user._id,
         content,
         lead: lead || null,
@@ -43,7 +43,7 @@ export const createNote = asyncHandler(async(req, res) => {
 
 export const updateNote = asyncHandler(async(req, res) => {
     const { owner,...updates } = req.body;
-    const note = await Note.findOneAndUpdate(
+    const note = await Notes.findOneAndUpdate(
         { _id: req.params.id, owner: req.user._id },
         updates,
         { new: true, runValidators: true}
@@ -56,7 +56,7 @@ export const updateNote = asyncHandler(async(req, res) => {
 // Function to delete a note\
 
 export const deleteNote = asyncHandler(async(req, res) => {
-    const note = await Note.findOneAndDelete({ _id: req.params.id, owner: req.user._id });
+    const note = await Notes.findOneAndDelete({ _id: req.params.id, owner: req.user._id });
     if(!note) throw new ApiError(404, "Note not found");
     res.json({ success: true, message: "Note Deleted"});
 });

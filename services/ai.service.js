@@ -1,8 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
-import { ApiError } from "../utils/ApiError";
-import { Schema } from "mongoose";
-import { response } from "express";
-import { config } from "dotenv";
+import { ApiError } from "../utils/ApiError.js";
+
 
 let client = null;
 
@@ -118,22 +116,20 @@ Return JSON only.`;
 // AI feature 2: to Generate the emails
 
 export const generateEmail = async ({ lead, purpose, tone, sender }) => {
-    const prompt = `You are a senior sales representative writing on behalf of ${sender?.name || "our team"
-        } ${sender?.company ? `at ${sender.company}` : ""}.
-    
+    const prompt = `You are a senior sales representative writing on behalf of ${sender?.name || "our team"} ${sender?.company ? `at ${sender.company}` : ""}.
+
 Write a professional sales email.
 Purpose: ${purpose || "follow-up"}
 Desired tone: ${tone || "friendly or professional"}
 
 Recipient (lead) details:
 — Name: ${lead?.name || "there"}
-— Company: $${lead?.company || "N/A"}
+— Company: ${lead?.company || "N/A"}
 — Pipeline stage: ${lead?.status || "New"}
 — Context / notes: ${lead?.notes || "none"}
 
 Return JSON only with a compelling subject line and a complete email body.
-use line breaks (\\n) in the body. keep it under 180 words sign off as ${sender?.name || "the TTM CRM team"
-        }.`;
+Use line breaks (\\n) in the body. Keep it under 180 words. Sign off as ${sender?.name || "the TTM CRM team"}.`;
 
     const schema = {
         type: "object",
@@ -144,8 +140,7 @@ use line breaks (\\n) in the body. keep it under 180 words sign off as ${sender?
         required: ["subject", "body"],
     };
 
-    return generateEmail(prompt, schema);
-
+    return generateJSON(prompt, schema);
 };
 
 
@@ -173,12 +168,12 @@ Return JSON only: `;
             insights: {
                 type: "array",
                 description: "3-5 specific data driven observations",
-                items: { type: "string" }, 
+                items: { type: "string" },
             },
 
-            recommendation: {
+            recommendations: {
                 type: "array",
-                description: "3-5 prioritized , actionable recommendations",
+                description: "3-5 prioritized, actionable recommendations",
                 items: { type: "string" }
             },
 
@@ -187,7 +182,7 @@ Return JSON only: `;
                 description: "Overall pipeline health 0-100",
             },
         },
-        required: ["headline", "insights","recommendations", "healthScore"],
+        required: ["headline", "insights", "recommendations", "healthScore"],
     };
 
     return generateJSON(prompt, schema);

@@ -28,13 +28,13 @@ export const getOverview = asyncHandler(async (req, res) => {
         if (l.status === 'Won') wonValue += l.value || 0;
     }
 
-    const won = byStage.won.count;
-    const lost = byStage.lost.count;
+    const won = byStage["Won"]?.count || 0;
+    const lost = byStage["Lost"]?.count || 0;
     const closed = won + lost;
     const conversionRate = closed ? Math.round((won / closed) * 100) : 0;
 
     const months = lastSixMonths();
-    const trend = months.map(({ key, label }) => ({ month: label, leads: 0, won: 0 }));
+    const trend = months.map(({ label }) => ({ month: label, leads: 0, won: 0 }));
     const indexByKey = Object.fromEntries(months.map((m, i) => [m.key, i]));
 
     for (const l of leads) {
@@ -43,10 +43,15 @@ export const getOverview = asyncHandler(async (req, res) => {
         const idx = indexByKey[key];
         if (idx !== undefined) {
             trend[idx].leads += 1;
-            if (l.status === "Won") trend[idx].won += l.value || 0;
+            // Add all values to show revenue engagement, won value for won deals
+            if (l.status === "Won") {
+                trend[idx].won += l.value || 0;
+            } else if (l.status !== "Lost") {
+                // Include active leads value as pipeline engagement
+                trend[idx].won += (l.value || 0) * 0.3; // 30% pipeline weight for engagement
+            }
         }
     }
-
 
     const recentLeads = [...leads]
         .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
@@ -57,25 +62,25 @@ export const getOverview = asyncHandler(async (req, res) => {
             company: l.company,
             status: l.status,
             value: l.value,
-            updatedAt: l.updateAt,
+            updatedAt: l.updatedAt,
         }));
 
     res.json({
         success: true,
         stats: {
-            revenueWon = wonValue,
-            pipelineValue = totalValue,
-            totalLeads = leads.length,
-            totalContacts = contactCount,
+            revenueWon: wonValue,
+            pipelineValue: totalValue,
+            totalLeads: leads.length,
+            totalContacts: contactCount,
             openTasks,
             conversionRate,
         },
         pipeline: stages.map((e) => ({
             stage: e,
-            count: byStage[e].count,
-            value: byStage[e].value,
+            count: byStage[e]?.count || 0,
+            value: byStage[e]?.value || 0,
         })),
-        trends,
+        trend,
         recentLeads,
     });
 
@@ -89,8 +94,8 @@ const lastSixMonths = () => {
     const now = new Date();
     const out = [];
     for (let i = 5; i >= 0; i--) {
-        const d = new Date(now.getFullYear(), now.getMonth - i, 1);
-        out.push({ key: `${d.getFullYear()} - ${d.getMonth()}`, label: labels[d.getMonth()] });
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        out.push({ key: `${d.getFullYear()}-${d.getMonth()}`, label: labels[d.getMonth()] });
     }
 
     return out;

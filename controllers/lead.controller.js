@@ -23,7 +23,7 @@ export const getLeads = asyncHandler(async (req, res) => {
 // Function to get the lead data
 
 export const getLead = asyncHandler(async (req, res) => {
-    const lead = await Lead.findOne({ _if: req.params.id, owner: req.user._id });
+    const lead = await Lead.findOne({ _id: req.params.id, owner: req.user._id });
     if (!lead) throw new ApiError(404, "Lead not found");
     res.json({ success: true, lead })
 })
@@ -32,7 +32,7 @@ export const getLead = asyncHandler(async (req, res) => {
 
 export const createLead = asyncHandler(async (req, res) => {
     const lead = await Lead.create({ ...req.body, owner: req.user._id });
-    req.status(201).json({ success: true, lead })
+    res.status(201).json({ success: true, lead })
 });
 
 
