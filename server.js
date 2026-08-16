@@ -14,6 +14,7 @@ import taskRoutes from "./routes/task.routes.js";
 
 import aiRoutes from "./routes/ai.routes.js";
 
+import analyticsRoutes from "./routes/analytics.routes.js";
 
 const app = express();
 
@@ -44,6 +45,8 @@ app.use("/api/notes", noteRoutes); // Route for Notes Services
 app.use("/api/tasks", taskRoutes); // Route for Task Services
 
 app.use("/api/ai", aiRoutes); // Route for Accessing AI services
+
+app.use("/api/analytics", analyticsRoutes);  // Route for accessing analytics service
 
 // Error Handling
 
